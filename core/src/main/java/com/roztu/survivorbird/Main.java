@@ -69,10 +69,32 @@ public class Main extends ApplicationAdapter {
     private void generateEnemyY(int index) {
         float minY = 100;
         float maxY = Gdx.graphics.getHeight() - 200;
-        for (int i = 0; i < 3; i++) {
-            enemyY[index][i] = minY + random.nextFloat() * (maxY - minY);
+
+        // Dinamik boşluk: skor arttıkça daralır
+        float minGap = Math.max(100, 200 - score * 5);
+
+        int formationType = random.nextInt(3);
+
+        if (formationType == 0) {
+            // Tekli
+            enemyY[index][0] = minY + random.nextFloat() * (maxY - minY);
+            enemyY[index][1] = -1000;
+            enemyY[index][2] = -1000;
+
+        } else if (formationType == 1) {
+            // İkili
+            float baseY = minY + random.nextFloat() * (maxY - minY - minGap);
+            enemyY[index][0] = baseY;
+            enemyY[index][1] = baseY + minGap + random.nextFloat() * 100;
+            enemyY[index][2] = -1000;
+
+        } else {
+            // Üçlü
+            float baseY = minY + random.nextFloat() * (maxY - minY - 2 * minGap);
+            enemyY[index][0] = baseY;
+            enemyY[index][1] = baseY + minGap + random.nextFloat() * 50;
+            enemyY[index][2] = enemyY[index][1] + minGap + random.nextFloat() * 50;
         }
-        Arrays.sort(enemyY[index]);
     }
 
     private void createExplosion(float x, float y) {
@@ -147,6 +169,7 @@ public class Main extends ApplicationAdapter {
                 }
 
                 for (int j = 0; j < 3; j++) {
+                    if (enemyY[i][j] == -1000) continue;
                     float width = Gdx.graphics.getWidth() / 15f;
                     float height = Gdx.graphics.getHeight() / 10f;
                     float y = enemyY[i][j];
@@ -190,6 +213,7 @@ public class Main extends ApplicationAdapter {
 
         for (int i = 0; i < numberOfEnemies; i++) {
             for (int j = 0; j < 3; j++) {
+                if (enemyY[i][j] == -1000) continue;
                 if (Intersector.overlaps(birdCircle, enemyCircles[i][j])) {
                     createExplosion(birdCircle.x, birdCircle.y);
                     gameState = 2;
