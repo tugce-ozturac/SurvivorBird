@@ -190,7 +190,9 @@ public class Main extends ApplicationAdapter {
             if (Gdx.input.justTouched()) gameState = 1;
 
         } else if (gameState == 2) {
-            font2.draw(batch, "Game Over! Tap To Play Again!", 100, Gdx.graphics.getHeight() / 2f);
+            font2.draw(batch, "Game Over! Tap To Play Again!", 650, Gdx.graphics.getHeight() / 2f);
+            font2.setColor(Color.PINK);
+
             if (Gdx.input.justTouched()) {
                 gameState = 1;
                 birdY = Gdx.graphics.getHeight() / 3f;
